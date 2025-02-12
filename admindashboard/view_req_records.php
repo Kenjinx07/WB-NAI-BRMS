@@ -12,8 +12,7 @@
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "SELECT * FROM `request_records`";
-    
+    $sql = "SELECT * FROM request_records";
     
     if (isset($_GET['delete_id'])) {
       $R_ID = $_GET['delete_id'];
@@ -128,17 +127,32 @@
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
-    }
-
-    table th, table td {
-      border: 2px solid #ddd;
-      padding: 8px;
       text-align: center;
     }
 
-    table th {
-      background-color: #4ad489;
+    table th, table td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #333;
       color: white;
+      text-align: center;
+    }
+    td {
+    background-color: #222;
+    color: white;
+    }
+
+    a {
+    color: #4da6ff; /* Ensures links are visible */
+    text-decoration: none;
+    }
+
+    a:hover {
+    text-decoration: underline;
     }
 
     table tr:nth-child(even) {
@@ -261,7 +275,7 @@
                 $Request_Reason = $result['Request_Reason'];
                 $R_Date = $result['R_Date'];
                 $Status = $result['Status'];
-                
+            
                 $row .= "<tr>
                     <td>$RF_Name</td>
                     <td>$RM_Name</td>
@@ -270,16 +284,18 @@
                     <td>$Request_Reason</td>
                     <td>$R_Date</td>
                     <td>$Status</td>
-                    <td><a href=''>Print</a></td>
+                    <td><a href='generate_pdf.php?R_ID=$R_ID'>Print</a></td>
                     <td><a href=''>Modify</a></td>
                     <td><a onclick='confirmDeletionR($R_ID)'>Delete</a></td>
                     </tr>";
+                }
             }
-            mysqli_free_result($query);
+            mysqli_free_result($query);    
         }
+        return $row;
     }
-    return $row;
-}
+
+  
 $s = viewRequestRecords($conn, $sql);
     echo "<table>
     <tr>
@@ -297,4 +313,4 @@ $s = viewRequestRecords($conn, $sql);
     </table>";
     ?></div>
   </body>
-  </html>
+</html>
