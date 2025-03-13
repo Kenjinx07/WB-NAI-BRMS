@@ -35,10 +35,11 @@ if(isset($_SESSION['ID_No'])) {
         $RF_Name = $_POST['RF_Name'];
         $RM_Name = $_POST['RM_Name'];
         $RL_Name = $_POST['RL_Name']; 
+        $Email = $_POST['Email'];
         $Request_Type = $_POST['Request_Type'];
         $Request_Reason = $_POST['Request_Reason'];
 
-        $add = $conn->add_requestRecord($RF_Name, $RM_Name, $RL_Name, $Request_Type, $Request_Reason);
+        $add = $conn->add_requestRecord($RF_Name, $RM_Name, $RL_Name, $Email, $Request_Type, $Request_Reason);
 
         if($add == TRUE) {
             echo "<div class='alert alert-success' role='alert'>Request Record Successfully! <script>setTimeout(function(){ location.replace('request_record.php'); }, 1000);</script></div>";
@@ -198,15 +199,16 @@ function confirmCancel() {
             <input type="text" id="RM_Name" name="RM_Name" value="<?php echo $M_Name; ?>" required>
             <label for="RL_Name">Last Name:</label>
             <input type="text" id="RL_Name" name="RL_Name" value="<?php echo $L_Name; ?>" required>
+            <label for="Email">Email:</label>
+            <input type="email" id="Email" name="Email" value="<?php echo $Email; ?>" required>
         </div>
         <div class="request-info">
             <label for="Request_Type">Record Type:</label>
             <select id="Request_Type" name="Request_Type" required>
                 <option value="" disabled selected>Select Request Type</option>
                 <option value="Barangay Clearance">Barangay Clearance</option>
-                <option value="Barangay Residency">Barangay Residency</option>
+                <option value="Construction Permit">Construction Permit</option>
                 <option value="Indigence Certificate">Indigence Certificate</option>
-                <option value="Mother and Child Record">Mother and Child Record</option>
                 <option value="Health Record">Health Record</option>
             </select>
         </div>

@@ -113,14 +113,18 @@ if (isset($_SESSION['success_msg'])) {
   <h1>Edit Profile</h1>
     <h2 class="text-center"> Verify Identification </h2>
 
-  <form id="uploadForm" enctype="multipart/form-data" method="POST">
-    <label for="front_image" class="form-label">Front of ID: </label>
-    <input type="file" name="front_image" accept="image/*" required>
-    <label for="back_image" class="form-label">Back of ID: </label>
-    <input type="file" name="back_image" accept="image/*" required>
-    <input type="hidden" name="user_id" value="<?php $ID_No ?>">
-    <input type="submit" value="Submit for Verification">
-  </form>
+    <form action="predict_front.php" method="POST" enctype="multipart/form-data">
+    <label>Upload Front ID:</label>
+    <input type="file" name="front_id" required>
+    <button type="submit">Verify Front</button>
+</form>
+
+<form action="predict_back.php" method="POST" enctype="multipart/form-data">
+    <label>Upload Back ID:</label>
+    <input type="file" name="back_id" required>
+    <button type="submit">Verify Back</button>
+</form>
+
   <div id="loading" style="display: none;">
         <p>Verifying identification...</p>
     </div>
@@ -128,35 +132,30 @@ if (isset($_SESSION['success_msg'])) {
     <div id="result"></div>
 
     <script>
-$(document).ready(function() {
-    $('#uploadForm').on('submit', function(event) {
-        event.preventDefault(); 
+    $(document).ready(function() {
+        $('#uploadForm').on('submit', function(event) {
+            event.preventDefault();
+            
+            var formData = new FormData(this);
+            $('#loading').show();
 
-        var formData = new FormData(this); 
-        
-        $('#loading').show(); 
-
-        $.ajax({
-            url: 'http://localhost:5000/verify', 
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function(response) {
-                $('#loading').hide();
-                if (response.verified) {
-                    $('#result').html('<p>Verification successful!</p><pre>' + JSON.stringify(response.parsed_data, null, 2) + '</pre>');
-                } else {
-                    $('#result').html('<p>Verification failed.</p>');
+            $.ajax({
+                url: 'http://localhost:5000/verify',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#loading').hide();
+                    $('#result').html(response);
+                },
+                error: function() {
+                    $('#loading').hide();
+                    $('#result').html('<p>Error occurred.</p>');
                 }
-            },
-            error: function(response) {
-                $('#loading').hide();
-                $('#result').html('<p>Error occurred during verification.</p>');
-            }
+            });
         });
     });
-});
 </script>
 
 </form>
@@ -298,10 +297,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       echo "No back image uploaded or file upload error.";
   }
 
-  // Handle user ID if present
   if (isset($_POST['user_id'])) {
       $user_id = $_POST['user_id'];
-      // You can proceed with updating the database or other logic using $user_id
   } else {
       echo "No user ID provided.";
   }
@@ -346,8 +343,8 @@ ob_end_flush()
   }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-<script src="assets/js/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
 <script src="assets/js/bootstrap.bundle.min.js"></script>
+<script src="assets/js/jquery.min.js"></script>
 </body>
 </html>

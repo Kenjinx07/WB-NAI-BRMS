@@ -284,7 +284,7 @@
                     <td>$Request_Reason</td>
                     <td>$R_Date</td>
                     <td>$Status</td>
-                    <td><a href='generate_pdf.php?R_ID=$R_ID'>Print</a></td>
+                    <td><a href='generate_pdf.php?R_ID=$R_ID' target='_blank'>Print</a></td>
                     <td><a href=''>Modify</a></td>
                     <td><a onclick='confirmDeletionR($R_ID)'>Delete</a></td>
                     </tr>";

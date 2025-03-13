@@ -36,15 +36,15 @@ class sample_class {
         }
     }
 
-    public function add_user($email, $password, $fname, $mname, $lname, $BirthDate, $contactno, $gender, $civilstatus, $nationality, $ispwd, $ispregnant, $subdivision, $streetname, $block, $lot, $role) 
+    public function add_user($Email, $Password, $F_Name, $M_Name, $L_Name, $BirthDate, $Contact_No, $Gender, $Civil_Status, $Nationality, $Is_pwd, $City, $Barangay, $Subdivision, $Street_Name, $Block, $Lot, $Role) 
     {
-        $query = "INSERT INTO users (Email, Password, F_Name, M_Name, L_Name, BirthDate, Contact_No, Gender, Civil_Status, Nationality, Is_pwd, Is_pregnant, Subdivision, Street_Name, Block, Lot, Role)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+        $query = "INSERT INTO users (Email, Password, F_Name, M_Name, L_Name, BirthDate, Contact_No, Gender, Civil_Status, Nationality, Is_pwd, City, Barangay, Subdivision, Street_Name, Block, Lot, Role)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+           
         $stmt = $this->conn->prepare($query);
     
         if ($stmt) {
-            $stmt->bind_param('sssssssssssssssss', $email, $password, $fname, $mname, $lname, $BirthDate, $contactno, $gender, $civilstatus, $nationality, $ispwd, $ispregnant, $subdivision, $streetname, $block, $lot, $role);
+            $stmt->bind_param('ssssssssssssssssss', $Email, $Password, $F_Name, $M_Name, $L_Name, $BirthDate, $Contact_No, $Gender, $Civil_Status, $Nationality, $Is_pwd, $City, $Barangay, $Subdivision, $Street_Name, $Block, $Lot, $Role);
             
             if ($stmt->execute()) {
                 return true;
@@ -93,15 +93,15 @@ class sample_class {
         }
     }
 
-    public function add_requestRecord($RF_Name, $RM_Name, $RL_Name, $Request_Type, $Request_Reason) 
+    public function add_requestRecord($RF_Name, $RM_Name, $RL_Name, $Email, $Request_Type, $Request_Reason) 
     {
         $R_Date = date("Y-m-d");
         $Status = "Processing";
     
-        $stmt = $this->pdo->prepare("INSERT INTO request_records (`RF_Name`, `RM_Name`, `RL_Name`, `Request_Type`, `Request_Reason`, `R_Date`, `Status`) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $this->pdo->prepare("INSERT INTO request_records (`RF_Name`, `RM_Name`, `RL_Name`, `Email`, `Request_Type`, `Request_Reason`, `R_Date`, `Status`) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
      
-        if ($stmt->execute([$RF_Name, $RM_Name, $RL_Name, $Request_Type, $Request_Reason, $R_Date, $Status])) {
+        if ($stmt->execute([$RF_Name, $RM_Name, $RL_Name, $Email, $Request_Type, $Request_Reason, $R_Date, $Status])) {
             return true;
         } else {
             error_log("SQL Error: " . implode(", ", $stmt->errorInfo()));

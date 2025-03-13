@@ -4,23 +4,24 @@ require_once "config/sample_class.php";
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-    $Email = filter_var($_POST['Email'], FILTER_SANITIZE_EMAIL);
-    $Password = htmlspecialchars($_POST['Password']);
-    $PasswordConfirm = htmlspecialchars($_POST['PasswordConfirm']);
-    $F_Name = htmlspecialchars($_POST['F_Name']);
-    $M_Name = htmlspecialchars($_POST['M_Name']);
-    $L_Name = htmlspecialchars($_POST['L_Name']);
-    $Birth_Date = $_POST['Birth_Date']; 
-    $Contact_No = htmlspecialchars($_POST['Contact_No']);
-    $Gender = htmlspecialchars($_POST['Gender']);
-    $Civil_Status = htmlspecialchars($_POST['Civil_Status']);
-    $Nationality = htmlspecialchars($_POST['Nationality']);
-    $Is_pwd = htmlspecialchars($_POST['Is_pwd']);
-    $Is_pregnant = htmlspecialchars($_POST['Is_pregnant']);
-    $Subdivision = htmlspecialchars($_POST['Subdivision']);
-    $Street_Name = htmlspecialchars($_POST['Street_Name']);
-    $Block = htmlspecialchars($_POST['Block']);
-    $Lot = htmlspecialchars($_POST['Lot']);
+    $Email = isset($_POST['Email']) ? ($_POST['Email']) : '';
+    $Password = isset($_POST['Password']) ? htmlspecialchars($_POST['Password']) : '';
+    $PasswordConfirm = isset($_POST['PasswordConfirm']) ? htmlspecialchars($_POST['PasswordConfirm']) : '';
+    $F_Name = isset($_POST['F_Name']) ? ($_POST['F_Name']) : '';
+    $M_Name = isset($_POST['M_Name']) ? ($_POST['M_Name']) : '';
+    $L_Name = isset($_POST['L_Name']) ? ($_POST['L_Name']) : '';
+    $BirthDate = isset($_POST['BirthDate']) ? $_POST['BirthDate'] : '';
+    $Contact_No = isset($_POST['Contact_No']) ? ($_POST['Contact_No']) : '';
+    $Gender = isset($_POST['Gender']) ? ($_POST['Gender']) : '';
+    $Civil_Status = isset($_POST['Civil_Status']) ? ($_POST['Civil_Status']) : '';
+    $Nationality = isset($_POST['Nationality']) ? ($_POST['Nationality']) : '';
+    $Is_pwd = isset($_POST['Is_pwd']) ? ($_POST['Is_pwd']) : '';
+    $City = isset($_POST['City']) ? ($_POST['City']) : '';
+    $Barangay = isset($_POST['Barangay']) ? ($_POST['Barangay']) : '';
+    $Subdivision = isset($_POST['Subdivision']) ? ($_POST['Subdivision']) : '';
+    $Street_Name = isset($_POST['Street_Name']) ? ($_POST['Street_Name']) : '';
+    $Block = isset($_POST['Block']) ? ($_POST['Block']) : '';
+    $Lot = isset($_POST['Lot']) ? ($_POST['Lot']) : '';
     
     if ($Password !== $PasswordConfirm) {
         echo "<div class='alert alert-danger' role='alert'>Passwords do not match! <script>setTimeout(function(){ location.replace('index.php'); }, 1000);</script></div>";
@@ -31,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $Role = 'unverified';  
 
     $conn = new sample_class();
-    $add = $conn->add_user($Email, $PasswordHash, $F_Name, $M_Name, $L_Name, $Birth_Date, $Contact_No, $Gender, $Civil_Status, $Nationality, $Is_pwd, $Is_pregnant, $Subdivision, $Street_Name, $Block, $Lot, $Role);
+    $add = $conn->add_user($Email, $PasswordHash, $F_Name, $M_Name, $L_Name, $BirthDate, $Contact_No, $Gender, $Civil_Status, $Nationality, $Is_pwd, $City, $Barangay, $Subdivision, $Street_Name, $Block, $Lot, $Role);
     
     if ($add === TRUE) {
         echo "

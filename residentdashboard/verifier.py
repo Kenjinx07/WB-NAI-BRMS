@@ -1,106 +1,23 @@
-import cv2
-import easyocr
-import os
+import onnxruntime as ort
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras.models import load_model
-from pyzbar.pyzbar import decode
+import requests
 
-class L1Dist(tf.keras.layers.Layer):
-    def __init__(self, **kwargs):
-        super().__init__()
+# Load models from Hugging Face
+model_front_url = "https://huggingface.co/Kenjinx07/NIDmodel/resolve/main/NIDmodel.onnx"
+model_back_url = "https://huggingface.co/Kenjinx07/NIDmodel-back/resolve/main/NIDmodel-back.onnx"
 
-    def call(self, input_embedding, validation_embedding):
-        return tf.math.abs(input_embedding - validation_embedding)
+# Download and save models locally
+for url, file_name in [(model_front_url, "NIDmodel.onnx"), (model_back_url, "NIDmodel-back.onnx")]:
+    response = requests.get(url)
+    with open(file_name, "wb") as f:
+        f.write(response.content)
 
-model_front = load_model('NIDmodel.keras', custom_objects={'L1Dist': L1Dist, 'BinaryCrossentropy': tf.losses.BinaryCrossentropy})
-model_back = load_model('NIDmodel-back.keras', custom_objects={'L1Dist': L1Dist, 'BinaryCrossentropy': tf.losses.BinaryCrossentropy})
+# Load ONNX models
+session_front = ort.InferenceSession("NIDmodel.onnx")
+session_back = ort.InferenceSession("NIDmodel-back.onnx")
 
-def preprocess(file_path):
-    byte_img = tf.io.read_file(file_path)
-    img = tf.io.decode_jpeg(byte_img)
-    img = tf.image.resize(img, (100, 100))
-    img = img / 255.0
-    return img
-
-reader = easyocr.Reader(['en'])
-
-def verify_and_extract_text_front(frame, model_front, detection_threshold=0.9, verification_threshold=0.7):
-    results = []
-
-    for image in os.listdir(os.path.join('application_data', 'verification_images', 'front')):
-        input_img = preprocess(os.path.join('application_data', 'input_image', 'front', 'input_image_front.jpg'))
-        validation_img = preprocess(os.path.join('application_data', 'verification_images', 'front', image))
-
-        result = model_front.predict([np.expand_dims(input_img, axis=0), np.expand_dims(validation_img, axis=0)])
-        results.append(result)
-
-    detection = np.sum(np.array(results) > detection_threshold)
-    verification = detection /  len(os.listdir(os.path.join('application_data', 'verification_images', 'front')))
-    verified = verification > verification_threshold
-
-    if verified:
-        ocr_results = reader.readtext(frame)
-        extracted_text = " ".join([res[1] for res in ocr_results])
-        return extracted_text, verified
-    else:
-        return None, verified
-
-def verify_and_extract_text_back(frame, model_back, detection_threshold=0.9, verification_threshold=0.7):
-    results = []
-
-    for image in os.listdir(os.path.join('application_data','verification_images', 'back')):
-        input_img = preprocess(os.path.join('application_data', 'input_image', 'back','input_image_back.jpg'))
-        validation_img = preprocess(os.path.join('application_data', 'verification_images', 'back', image))
-
-        result = model_back.predict([np.expand_dims(input_img, axis=0), np.expand_dims(validation_img, axis=0)])
-        results.append(result)
-        
-    detection = np.sum(np.array(results) > detection_threshold)
-    verification = detection /  len(os.listdir(os.path.join('application_data', 'verification_images', 'back')))
-    verified = verification > verification_threshold
-
-    if verified:
-        ocr_results = reader.readtext(frame)
-        extracted_text = " ".join([res[1] for res in ocr_results])
-        return extracted_text, verified
-    else:
-        return None, verified
-    
-def verify_qr_and_extract_data(frame):
-    qr_codes = decode(frame)
-    if qr_codes:
-        for qr_code in qr_codes:
-            qr_data = qr_code.data.decode('utf-8')
-            return qr_data, True
-    return None, False
-
-cap = cv2.VideoCapture(0)
-while cap.isOpened():
-    ret, frame = cap.read()
-    frame = frame[:1080, :1920, :]
-
-    cv2.imshow('verification', frame)
-
-    if cv2.waitKey(5) & 0xFF == ord('v'):
-        cv2.imwrite(os.path.join('application_data', 'input_image', 'front', 'input_image_front.jpg'), frame)
-        extracted_text, verified = verify_and_extract_text_front(frame, model_front, detection_threshold=0.9, verification_threshold=0.7)
-        if verified:
-            print("Front Verified and Extracted Text:", extracted_text)
-        else:
-            print("Front Verification failed")
-
-    elif cv2.waitKey(5) & 0xFF == ord('b'):
-        cv2.imwrite(os.path.join('application_data', 'input_image', 'back', 'input_image_back.jpg'), frame)
-        qr_data, verified = verify_qr_and_extract_data(frame)
-        if verified:
-            extracted_text, verified = verify_and_extract_text_back(frame, model_back, detection_threshold=0.9, verification_threshold=0.7)
-            print("Back QR Code Verified and Extracted Data:", extracted_text, qr_data)
-        else:
-            print("Back Verification failed")
-
-    if cv2.waitKey(5) & 0xFF == ord('q'):
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+def verify_image(input_img, validation_img, session):
+    input_img = np.expand_dims(input_img, axis=0).astype(np.float32)
+    validation_img = np.expand_dims(validation_img, axis=0).astype(np.float32)
+    outputs = session.run(None, {"input_embedding": input_img, "validation_embedding": validation_img})
+    return outputs[0]

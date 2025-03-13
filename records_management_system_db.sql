@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2024 at 05:03 PM
+-- Generation Time: Feb 20, 2025 at 08:35 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -85,6 +85,7 @@ CREATE TABLE `request_records` (
   `RF_Name` varchar(255) NOT NULL,
   `RM_Name` varchar(255) NOT NULL,
   `RL_Name` varchar(255) NOT NULL,
+  `Email` varchar(255) NOT NULL,
   `Request_Type` varchar(255) DEFAULT NULL,
   `Request_Reason` varchar(255) NOT NULL,
   `R_Date` date NOT NULL,
@@ -95,12 +96,12 @@ CREATE TABLE `request_records` (
 -- Dumping data for table `request_records`
 --
 
-INSERT INTO `request_records` (`R_ID`, `RF_Name`, `RM_Name`, `RL_Name`, `Request_Type`, `Request_Reason`, `R_Date`, `Status`) VALUES
-(26, 'Kenji', ' Apolinar', ' Ferenal', 'Health Record', 'hrtdzhjrfdzhjnrdz', '2024-10-09', 'Processing'),
-(27, 'Kenji', ' Apolinar', ' Ferenal', 'Barangay Residency', 'gerszhbrdszjhz', '2024-10-09', 'Processing'),
-(31, 'Kenji', ' Apolinar', ' Ferenal', 'Mother and Child Record', 'htsdhyrdhrd', '2024-10-09', 'Processing'),
-(32, 'Kenji', 'Apolinar', 'Ferenal', 'Indigence Certificate', 'ghrdhyrdxzhyrdx', '2024-10-09', 'Processing'),
-(34, 'Kenjie', 'Apolinar', 'Ferenal', 'Indigence Certificate', 'tjntfgjntfrgzxjrjrhz', '2024-10-10', 'Processing');
+INSERT INTO `request_records` (`R_ID`, `RF_Name`, `RM_Name`, `RL_Name`, `Email`, `Request_Type`, `Request_Reason`, `R_Date`, `Status`) VALUES
+(38, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Barangay Clearance', 'Educational Assistance', '2025-02-12', 'Processing'),
+(41, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Barangay Clearance', 'Job Requirement', '2025-02-13', 'Processing'),
+(45, 'Jane', 'Marasigan', 'Doe', 'janedoe@gmail.com', 'Barangay Clearance', 'Educ Assistance', '2025-02-13', 'Processing'),
+(48, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Indigence Certificate', 'Ayuda', '2025-02-19', 'Processing'),
+(49, 'Jane', 'Marasigan', 'Doe', 'janedoe@gmail.com', 'Indigence Certificate', 'Ayuda Requirement', '2025-02-19', 'Processing');
 
 -- --------------------------------------------------------
 
@@ -144,25 +145,26 @@ CREATE TABLE `users` (
   `Gender` varchar(255) NOT NULL,
   `Civil_Status` varchar(255) NOT NULL,
   `Nationality` varchar(255) NOT NULL,
-  `Is_pwd` varchar(255) DEFAULT NULL,
-  `Is_Pregnant` varchar(255) DEFAULT NULL,
+  `Barangay` varchar(255) NOT NULL,
   `Subdivision` varchar(255) NOT NULL,
   `Street_Name` varchar(255) NOT NULL,
   `Block` int(5) NOT NULL,
   `Lot` int(5) NOT NULL,
-  `uploads` int(11) NOT NULL
+  `uploads` int(11) NOT NULL,
+  `Profile_Picture` varchar(255) DEFAULT NULL,
+  `Signature` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`ID_No`, `Role`, `Email`, `Password`, `F_Name`, `M_Name`, `L_Name`, `BirthDate`, `Contact_No`, `Gender`, `Civil_Status`, `Nationality`, `Is_pwd`, `Is_Pregnant`, `Subdivision`, `Street_Name`, `Block`, `Lot`, `uploads`) VALUES
-(1, 'admin', 'admin@gmail.com', '$2y$10$BcPJxNGTlvFkLDnhZn6jFuCs5WAw5mLzur1CEvOu7nO4B9b68eNrO', 'John', 'Marasigan', 'Doe', '0000-00-00', '09999999999', 'Male', 'Single', 'Filipino', 'No', 'No', 'Woodsite 1', 'Tecson', 3, 15, 0),
-(6, 'verified', 'kenjiferenal@gmail.com', '$2y$10$Ccqtoqcqq1ESQg8uGNxRveaw4qsHicAw3bNriLPej2kMG4BxTXvpS', 'Kenji', 'Apolinar', 'Ferenal', '2002-01-03', '09214336349', 'Male', 'Single', 'Filipino', 'No', 'No', 'Woodsite 3', 'Colayco', 7, 4, 1),
-(16, 'unverified', 'kenjferenal@gmail.com', '$2y$10$t.0JoTLb5lrTmwICSekxdOLpWjHOopUcUJuVghPn0kLFbzORVkQp6', 'Kenj', 'Apolin', 'Ferenal', '2002-01-03', '09674071029', 'Male', 'Single', 'Filipino', 'No', 'No', 'Woodsite 3', 'Colayco', 7, 4, 0),
-(17, 'verified', 'janedoe@gmail.com', '$2y$10$dawijsk6hjuO3806XJ6AEuF6udGtS1xiPlTA64ieD3WtVtjNOqftq', 'Jane', 'Marasigan', 'Doe', '2000-12-03', '09543265532', 'Female', 'Single', 'Filipino', 'No', 'No', 'Woodsite 3', 'Bugallon', 6, 4, 0),
-(18, 'unverified', 'kenferenal@gmail.com', '$2y$10$U6A.4WWzacx3qfsuiBfdyusCAiwld35o2FdMnsW7M9rJiVghhpPtS', 'ken', 'Apo', 'Fern', '2002-01-03', '092153463723', 'Male', 'Single', 'Filipino', 'No', 'No', 'Woodsite', '1', 3, 2, 0);
+INSERT INTO `users` (`ID_No`, `Role`, `Email`, `Password`, `F_Name`, `M_Name`, `L_Name`, `BirthDate`, `Contact_No`, `Gender`, `Civil_Status`, `Nationality`, `Barangay`, `Subdivision`, `Street_Name`, `Block`, `Lot`, `uploads`, `Profile_Picture`, `Signature`) VALUES
+(1, 'admin', 'admin@gmail.com', '$2y$10$BcPJxNGTlvFkLDnhZn6jFuCs5WAw5mLzur1CEvOu7nO4B9b68eNrO', 'John', 'Marasigan', 'Doe', '0000-00-00', '09999999999', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 1', 'Tecson', 3, 15, 0, NULL, NULL),
+(6, 'verified', 'kenjiferenal@gmail.com', '$2y$10$Ccqtoqcqq1ESQg8uGNxRveaw4qsHicAw3bNriLPej2kMG4BxTXvpS', 'Kenji', 'Apolinar', 'Ferenal', '2002-01-03', '09214336349', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 3', 'Colayco', 7, 4, 1, NULL, NULL),
+(16, 'unverified', 'kenjferenal@gmail.com', '$2y$10$t.0JoTLb5lrTmwICSekxdOLpWjHOopUcUJuVghPn0kLFbzORVkQp6', 'Kenj', 'Apolin', 'Ferenal', '2002-01-03', '09674071029', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 3', 'Colayco', 7, 4, 0, NULL, NULL),
+(17, 'verified', 'janedoe@gmail.com', '$2y$10$dawijsk6hjuO3806XJ6AEuF6udGtS1xiPlTA64ieD3WtVtjNOqftq', 'Jane', 'Marasigan', 'Doe', '2000-12-03', '09543265532', 'Female', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 3', 'Bugallon', 6, 4, 0, NULL, NULL),
+(18, 'unverified', 'kenferenal@gmail.com', '$2y$10$U6A.4WWzacx3qfsuiBfdyusCAiwld35o2FdMnsW7M9rJiVghhpPtS', 'ken', 'Apo', 'Fern', '2002-01-03', '092153463723', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite', '1', 3, 2, 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -197,7 +199,8 @@ ALTER TABLE `roles`
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`ID_No`) USING BTREE;
+  ADD PRIMARY KEY (`ID_No`) USING BTREE,
+  ADD UNIQUE KEY `Email` (`Email`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -219,7 +222,7 @@ ALTER TABLE `complaints`
 -- AUTO_INCREMENT for table `request_records`
 --
 ALTER TABLE `request_records`
-  MODIFY `R_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `R_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `roles`
