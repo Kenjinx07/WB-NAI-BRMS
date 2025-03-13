@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 20, 2025 at 08:35 AM
+-- Generation Time: Mar 13, 2025 at 08:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -45,8 +45,7 @@ CREATE TABLE `blotters` (
 
 INSERT INTO `blotters` (`B_ID`, `BF_Name`, `BM_Name`, `BL_Name`, `B_Email`, `B_Type`, `B_Description`, `B_Date`, `B_Status`) VALUES
 (2, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Fraud', 'gyuhjkm', '2024-10-09', 'Filed'),
-(10, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'MissingPerson', 'gesgseGes', '2024-10-11', 'Filed'),
-(12, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'MissingPerson', 'grdxgrdgrd', '2024-10-14', 'Filed');
+(10, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'MissingPerson', 'gesgseGes', '2024-10-11', 'Filed');
 
 -- --------------------------------------------------------
 
@@ -77,6 +76,28 @@ INSERT INTO `complaints` (`C_ID`, `CF_Name`, `CM_Name`, `CL_Name`, `Email`, `C_D
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `id_samples`
+--
+
+CREATE TABLE `id_samples` (
+  `id` int(11) NOT NULL,
+  `id_type` enum('front','back') DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `id_samples`
+--
+
+INSERT INTO `id_samples` (`id`, `id_type`, `image_path`) VALUES
+(1, 'front', NULL),
+(2, 'front', NULL),
+(4, 'front', NULL),
+(5, 'back', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `request_records`
 --
 
@@ -101,7 +122,8 @@ INSERT INTO `request_records` (`R_ID`, `RF_Name`, `RM_Name`, `RL_Name`, `Email`,
 (41, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Barangay Clearance', 'Job Requirement', '2025-02-13', 'Processing'),
 (45, 'Jane', 'Marasigan', 'Doe', 'janedoe@gmail.com', 'Barangay Clearance', 'Educ Assistance', '2025-02-13', 'Processing'),
 (48, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Indigence Certificate', 'Ayuda', '2025-02-19', 'Processing'),
-(49, 'Jane', 'Marasigan', 'Doe', 'janedoe@gmail.com', 'Indigence Certificate', 'Ayuda Requirement', '2025-02-19', 'Processing');
+(49, 'Jane', 'Marasigan', 'Doe', 'janedoe@gmail.com', 'Indigence Certificate', 'Ayuda Requirement', '2025-02-19', 'Processing'),
+(50, 'Kenji', 'Apolinar', 'Ferenal', 'kenjiferenal@gmail.com', 'Barangay Clearance', 'Medical Assistance', '2025-02-20', 'Processing');
 
 -- --------------------------------------------------------
 
@@ -145,11 +167,13 @@ CREATE TABLE `users` (
   `Gender` varchar(255) NOT NULL,
   `Civil_Status` varchar(255) NOT NULL,
   `Nationality` varchar(255) NOT NULL,
+  `City` varchar(255) NOT NULL,
   `Barangay` varchar(255) NOT NULL,
   `Subdivision` varchar(255) NOT NULL,
   `Street_Name` varchar(255) NOT NULL,
   `Block` int(5) NOT NULL,
   `Lot` int(5) NOT NULL,
+  `Is_pwd` varchar(255) NOT NULL,
   `uploads` int(11) NOT NULL,
   `Profile_Picture` varchar(255) DEFAULT NULL,
   `Signature` varchar(255) DEFAULT NULL
@@ -159,12 +183,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`ID_No`, `Role`, `Email`, `Password`, `F_Name`, `M_Name`, `L_Name`, `BirthDate`, `Contact_No`, `Gender`, `Civil_Status`, `Nationality`, `Barangay`, `Subdivision`, `Street_Name`, `Block`, `Lot`, `uploads`, `Profile_Picture`, `Signature`) VALUES
-(1, 'admin', 'admin@gmail.com', '$2y$10$BcPJxNGTlvFkLDnhZn6jFuCs5WAw5mLzur1CEvOu7nO4B9b68eNrO', 'John', 'Marasigan', 'Doe', '0000-00-00', '09999999999', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 1', 'Tecson', 3, 15, 0, NULL, NULL),
-(6, 'verified', 'kenjiferenal@gmail.com', '$2y$10$Ccqtoqcqq1ESQg8uGNxRveaw4qsHicAw3bNriLPej2kMG4BxTXvpS', 'Kenji', 'Apolinar', 'Ferenal', '2002-01-03', '09214336349', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 3', 'Colayco', 7, 4, 1, NULL, NULL),
-(16, 'unverified', 'kenjferenal@gmail.com', '$2y$10$t.0JoTLb5lrTmwICSekxdOLpWjHOopUcUJuVghPn0kLFbzORVkQp6', 'Kenj', 'Apolin', 'Ferenal', '2002-01-03', '09674071029', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 3', 'Colayco', 7, 4, 0, NULL, NULL),
-(17, 'verified', 'janedoe@gmail.com', '$2y$10$dawijsk6hjuO3806XJ6AEuF6udGtS1xiPlTA64ieD3WtVtjNOqftq', 'Jane', 'Marasigan', 'Doe', '2000-12-03', '09543265532', 'Female', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite 3', 'Bugallon', 6, 4, 0, NULL, NULL),
-(18, 'unverified', 'kenferenal@gmail.com', '$2y$10$U6A.4WWzacx3qfsuiBfdyusCAiwld35o2FdMnsW7M9rJiVghhpPtS', 'ken', 'Apo', 'Fern', '2002-01-03', '092153463723', 'Male', 'Single', 'Filipino', 'Pasong Buaya 2', 'Woodsite', '1', 3, 2, 0, NULL, NULL);
+INSERT INTO `users` (`ID_No`, `Role`, `Email`, `Password`, `F_Name`, `M_Name`, `L_Name`, `BirthDate`, `Contact_No`, `Gender`, `Civil_Status`, `Nationality`, `City`, `Barangay`, `Subdivision`, `Street_Name`, `Block`, `Lot`, `Is_pwd`, `uploads`, `Profile_Picture`, `Signature`) VALUES
+(1, 'admin', 'admin@gmail.com', '$2y$10$BcPJxNGTlvFkLDnhZn6jFuCs5WAw5mLzur1CEvOu7nO4B9b68eNrO', 'John', 'Marasigan', 'Doe', '0000-00-00', '09999999999', 'Male', 'Single', 'Filipino', 'Imus', 'Pasong Buaya 2', 'Woodsite 1', 'Tecson', 3, 15, 'No', 0, NULL, NULL),
+(6, 'verified', 'kenjiferenal@gmail.com', '$2y$10$Ccqtoqcqq1ESQg8uGNxRveaw4qsHicAw3bNriLPej2kMG4BxTXvpS', 'Kenji', 'Apolinar', 'Ferenal', '2002-01-03', '09214336349', 'Male', 'Single', 'Filipino', 'Imus', 'Pasong Buaya 2', 'Woodsite 3', 'Colayco', 7, 4, '', 1, NULL, NULL),
+(16, 'unverified', 'kenjferenal@gmail.com', '$2y$10$t.0JoTLb5lrTmwICSekxdOLpWjHOopUcUJuVghPn0kLFbzORVkQp6', 'Kenj', 'Apolin', 'Ferenal', '2002-01-03', '09674071029', 'Male', 'Single', 'Filipino', '', 'Pasong Buaya 2', 'Woodsite 3', 'Colayco', 7, 4, '', 0, NULL, NULL),
+(17, 'verified', 'janedoe@gmail.com', '$2y$10$dawijsk6hjuO3806XJ6AEuF6udGtS1xiPlTA64ieD3WtVtjNOqftq', 'Jane', 'Marasigan', 'Doe', '2000-12-03', '09543265532', 'Female', 'Single', 'Filipino', '', 'Pasong Buaya 2', 'Woodsite 3', 'Bugallon', 6, 4, '', 0, NULL, NULL);
 
 --
 -- Indexes for dumped tables
@@ -181,6 +204,12 @@ ALTER TABLE `blotters`
 --
 ALTER TABLE `complaints`
   ADD PRIMARY KEY (`C_ID`);
+
+--
+-- Indexes for table `id_samples`
+--
+ALTER TABLE `id_samples`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `request_records`
@@ -219,10 +248,16 @@ ALTER TABLE `complaints`
   MODIFY `C_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
+-- AUTO_INCREMENT for table `id_samples`
+--
+ALTER TABLE `id_samples`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `request_records`
 --
 ALTER TABLE `request_records`
-  MODIFY `R_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `R_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -234,7 +269,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID_No` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `ID_No` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
